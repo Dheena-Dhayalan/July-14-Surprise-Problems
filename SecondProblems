@@ -1,0 +1,34 @@
+import java.util.Scanner;
+
+public class PrimeFibonacci {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the total no.of.values: ");
+        int totalNoOfValues = scanner.nextInt();
+
+        int firstValue = 0;
+        int secondValue = 1;
+        int nextValue = firstValue + secondValue;
+
+        while (nextValue <= totalNoOfValues) {
+            boolean primeCheck = true;
+
+            if (nextValue != 1) {
+                for (int j = 2; j < nextValue / 2; j++) {
+                    if (nextValue % j == 0) {
+                        primeCheck = false;
+                        break;
+                    }
+                }
+
+                if (primeCheck) {
+                    System.out.println(nextValue);
+                }
+            }
+
+            firstValue = secondValue;
+            secondValue = nextValue;
+            nextValue = firstValue + secondValue;
+        }
+    }
+}
