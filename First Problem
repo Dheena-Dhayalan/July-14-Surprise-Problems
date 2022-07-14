@@ -1,0 +1,181 @@
+import java.util.Scanner;
+
+public class Calculator {
+    static Scanner scanner = new Scanner(System.in);
+    static String userValues = "";
+    static double mathResult = 0.0;
+
+    public static void main(String[] args) {
+        System.out.println("--------------------------------------------------");
+        System.out.println("--------- Welcome to the Math world... -----------");
+        System.out.println("You are given a four values and four operators..!!");
+        System.out.println("--------- Have fun and call the math... ----------");
+        System.out.println("--------------------------------------------------");
+
+        displayManageEngine();
+    }
+
+    private static void displayManageEngine() {
+        int totalValuesCount = 0;
+
+        while (true) {
+            System.out.println("0. Exit...");
+            System.out.println("1. Four values --> 1 2 3 4");
+            System.out.println("2. Four Operators --> + - x /");
+
+            System.out.print("Choose the displayed option: ");
+            int userChoice = scanner.nextInt();
+
+            if (userChoice == 0) {
+                break;
+            } else if (userChoice == 1 || userChoice == 2) {
+                doMath(totalValuesCount, userChoice);
+            } else {
+                System.out.println("Invalid manage engine choice...");
+                displayManageEngine();
+            }
+        }
+    }
+
+    private static void doMath(int totalValuesCount, int userChoice) {
+        if (userChoice == 1) {
+            if (totalValuesCount == 4) {
+                System.out.println("No numbers are there...");
+                System.out.println("Can't add numbers for math operations...");
+                reverseProcess(totalValuesCount);
+            } else {
+                System.out.print("Enter the value: ");
+                char userValue = scanner.next().charAt(0);
+                boolean userValueCheck = true;
+
+                for (int i = 0; i < userValues.length(); i++) {
+                    if (userValue == userValues.charAt(i)) {
+                        userValueCheck = false;
+                        break;
+                    }
+                }
+
+                if (userValueCheck) {
+                    userValues += userValue;
+                    double mathResultValue = doCalculation();
+                    System.out.println("The math result is: " + mathResultValue);
+                } else {
+                    System.out.println("The requested value is not available...");
+                    System.out.println("Try other values (or) get this value back...");
+                    String userValueDecision = scanner.nextLine().toLowerCase();
+
+                    if (userValueDecision.equals("other")) {
+                        doMath(totalValuesCount, userChoice);
+                    } else {
+                        reverseProcess(totalValuesCount);
+                    }
+                }
+            }
+        } else if (userChoice == 2) {
+            System.out.print("1. Remove operators...");
+            System.out.print("2. Add operators...");
+
+            System.out.println();
+
+            System.out.print("Enter the operator decision choice: ");
+            int operatorDecisionChoice = scanner.nextInt();
+
+            if (operatorDecisionChoice == 1) {
+                reverseProcess();
+            } else {
+                System.out.print("Enter the operator: ");
+                userValues += scanner.next().charAt(0);
+                System.out.println(userValues);
+            }
+        } else {
+            System.out.println("Invalid manage engine choice...");
+        }
+    }
+
+    private static double doCalculation() {
+        for (int i = 0; i < userValues.length() - 1; i++) {
+            System.out.println(mathResult);
+
+            if (i == 0) {
+                mathResult = Double.parseDouble(String.valueOf(userValues.charAt(i)));
+            } else {
+                if (userValues.charAt(i) == '(') {
+                    int currentIndex = i;
+
+                    while (userValues.charAt(i) != ')') {
+                        if (i == userValues.length() - 1) {
+                            return mathResult;
+                        }
+
+                        ++i;
+
+                        if (userValues.charAt(i) == '+') {
+                            mathResult = mathResult + (double) userValues.charAt(i + 1);
+                        } else if (userValues.charAt(i) == '-') {
+                            mathResult = mathResult - (double) userValues.charAt(i + 1);
+                        } else if (userValues.charAt(i) == '*') {
+                            mathResult = mathResult * (double) userValues.charAt(i + 1);
+                        } else if (userValues.charAt(i) == '/') {
+                            mathResult = mathResult / (double) userValues.charAt(i + 1);
+                        }
+                    }
+
+                    if (userValues.charAt(currentIndex - 1) == '+') {
+                        mathResult = mathResult + (double) userValues.charAt(i + 1);
+                    } else if (userValues.charAt(currentIndex - 1) == '-') {
+                        mathResult = mathResult - (double) userValues.charAt(i + 1);
+                    } else if (userValues.charAt(currentIndex - 1) == '*') {
+                        mathResult = mathResult * (double) userValues.charAt(i + 1);
+                    } else if (userValues.charAt(currentIndex - 1) == '/') {
+                        mathResult = mathResult / (double) userValues.charAt(i + 1);
+                    }
+                } else {
+                    if (userValues.charAt(i - 1) == '+') {
+                        mathResult = mathResult + (double) userValues.charAt(i);
+                    } else if (userValues.charAt(i - 1) == '-') {
+                        mathResult = mathResult - (double) userValues.charAt(i);
+                    } else if (userValues.charAt(i - 1) == '*') {
+                        mathResult = mathResult * (double) userValues.charAt(i);
+                    } else if (userValues.charAt(i - 1) == '/') {
+                        mathResult = mathResult / (double) userValues.charAt(i);
+                    }
+                }
+            }
+        }
+
+        return mathResult;
+    }
+
+    private static void reverseProcess() {
+        StringBuilder modifiedUserValue = new StringBuilder();
+
+        System.out.print("Enter the operator to remove...");
+        char operatorToRemove = scanner.next().charAt(0);
+
+        for (int i = 0; i < userValues.length(); i++) {
+            if (userValues.charAt(i) != operatorToRemove) {
+                modifiedUserValue.append(userValues.charAt(i));
+            }
+        }
+
+        userValues = modifiedUserValue.toString();
+        System.out.println(userValues);
+    }
+
+    private static void reverseProcess(int totalValuesCount) {
+        StringBuilder modifiedUserValue = new StringBuilder();
+
+        System.out.print("Enter the value to remove: ");
+        char userValueToRemove = scanner.next().charAt(0);
+
+        for (int i = 0; i < userValues.length(); i++) {
+            if (userValues.charAt(i) != userValueToRemove) {
+                modifiedUserValue.append(userValues.charAt(i));
+            }
+        }
+
+        userValues = modifiedUserValue.toString();
+        --totalValuesCount;
+        System.out.println(userValues);
+    }
+}
